@@ -528,6 +528,23 @@ class TestDiscretise(unittest.TestCase):
             x3_disc.evaluate(), 3 * disc.mesh["negative electrode"].nodes
         )
 
+    def test_discretise_concatenation(self):
+        mesh = MeshForTesting()
+        disc = pybamm.BaseDiscretisation(mesh)
+
+        varn = pybamm.Variable("var", domain=["negative electrode"])
+        vars = pybamm.Variable("var", domain=["separator"])
+        varp = pybamm.Variable("var", domain=["positive electrode"])
+
+        conc = pybamm.Concatenation(varn, vars, varp)
+        y_slices = disc.get_variable_slices([varn, vars, varp])
+        processed_conc = disc.process_symbol(conc, y_slices)
+
+        # should be DomainConcatenation and evaluate to right shape
+        self.assertIsInstance(processed_conc, pybamm.DomainConcatenation)
+        y = mesh["whole cell"].nodes
+        np.testing.assert_array_equal(processed_conc.evaluate(None, y), y)
+
 
 if __name__ == "__main__":
     print("Add -v for more debug output")

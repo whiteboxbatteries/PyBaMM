@@ -147,13 +147,15 @@ class TestButlerVolmerLeadAcid(unittest.TestCase):
 
         # should evaluate to vectors with the right shape
         self.assertEqual(
-            processed_bv_n.evaluate(0, y).shape, mesh["negative electrode"].nodes.shape
+            processed_bv_n.evaluate(None, y).shape,
+            mesh["negative electrode"].nodes.shape,
         )
         self.assertEqual(
-            processed_bv_p.evaluate(0, y).shape, mesh["positive electrode"].nodes.shape
+            processed_bv_p.evaluate(None, y).shape,
+            mesh["positive electrode"].nodes.shape,
         )
         self.assertEqual(
-            processed_bv_whole.evaluate(0, y).shape, mesh["whole cell"].nodes.shape
+            processed_bv_whole.evaluate(None, y).shape, mesh["whole cell"].nodes.shape
         )
 
 

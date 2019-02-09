@@ -107,7 +107,6 @@ class DomainConcatenation(Concatenation):
         # concatenation
 
         children = list(children)
-
         for i, child in enumerate(children):
             if child.is_constant():
                 children[i] = self.process_node_for_concatenate(child, mesh)

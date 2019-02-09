@@ -263,7 +263,7 @@ class BaseDiscretisation(object):
             assert isinstance(y_slices, dict), ValueError(
                 """y_slices should be dict, not {}""".format(type(y_slices))
             )
-            return pybamm.StateVector(y_slices[symbol.id])
+            return pybamm.StateVector(y_slices[symbol.id], domain=symbol.domain)
 
         elif isinstance(symbol, pybamm.Space):
             symbol_mesh = self.mesh.combine_submeshes(*symbol.domain)
