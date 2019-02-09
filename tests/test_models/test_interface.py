@@ -110,7 +110,7 @@ class TestButlerVolmerLeadAcid(unittest.TestCase):
         proc_bv = param.process_symbol(bv)
         [self.assertNotIsInstance(x, pybamm.Parameter) for x in proc_bv.pre_order()]
 
-    def test_discretisation(self):
+    def test_discretisation_dae(self):
         # create exchange-current densities
         cn = pybamm.Variable("concentration", domain=["negative electrode"])
         cp = pybamm.Variable("concentration", domain=["positive electrode"])
@@ -144,6 +144,56 @@ class TestButlerVolmerLeadAcid(unittest.TestCase):
             [mesh["negative electrode"].nodes, mesh["positive electrode"].nodes]
         )
         y = np.concatenate([submesh ** 2, submesh ** 3, -submesh])
+
+        # should evaluate to vectors with the right shape
+        self.assertEqual(
+            processed_bv_n.evaluate(None, y).shape,
+            mesh["negative electrode"].nodes.shape,
+        )
+        self.assertEqual(
+            processed_bv_p.evaluate(None, y).shape,
+            mesh["positive electrode"].nodes.shape,
+        )
+        self.assertEqual(
+            processed_bv_whole.evaluate(None, y).shape, mesh["whole cell"].nodes.shape
+        )
+
+    def test_discretisation_ode(self):
+        # create exchange-current densities
+        cn = pybamm.Variable("concentration", domain=["negative electrode"])
+        cp = pybamm.Variable("concentration", domain=["positive electrode"])
+        etan = pybamm.Variable("overpotential", domain=["negative electrode"])
+        etap = pybamm.Variable("overpotential", domain=["positive electrode"])
+        bv_n = pybamm.interface.butler_volmer_lead_acid(
+            ["negative electrode"], system="pde"
+        )
+        bv_p = pybamm.interface.butler_volmer_lead_acid(
+            ["positive electrode"], system="pde"
+        )
+        bv_whole = pybamm.interface.butler_volmer_lead_acid(
+            ["negative electrode", "separator", "positive electrode"], system="pde"
+        )
+
+        # process parameters
+        param = pybamm.ParameterValues(
+            "input/parameters/lead-acid/default.csv", {"current scale": 1}
+        )
+        param_bv_n = param.process_symbol(bv_n)
+        param_bv_p = param.process_symbol(bv_p)
+        param_bv_whole = param.process_symbol(bv_whole)
+
+        # discretise
+        mesh = pybamm.FiniteVolumeMacroMesh(param, 10)
+        disc = pybamm.FiniteVolumeDiscretisation(mesh)
+        y_slices = disc.get_variable_slices([cn, cp, etan, etap])
+        processed_bv_n = disc.process_symbol(param_bv_n, y_slices)
+        processed_bv_p = disc.process_symbol(param_bv_p, y_slices)
+        processed_bv_whole = disc.process_symbol(param_bv_whole, y_slices)
+
+        submesh = np.concatenate(
+            [mesh["negative electrode"].nodes, mesh["positive electrode"].nodes]
+        )
+        y = np.concatenate([submesh ** 2, submesh ** 3])
 
         # should evaluate to vectors with the right shape
         self.assertEqual(
