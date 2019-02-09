@@ -58,3 +58,43 @@ class StefanMaxwellDiffusion(pybamm.BaseModel):
             N_e: {"left": pybamm.Scalar(0), "right": pybamm.Scalar(0)}
         }
         self.variables = {"c_e": c_e, "N_e": N_e}
+
+
+class StefanMaxwellDiffusionWithElectrolyte(pybamm.BaseModel):
+    """A class that generates the expression tree for Stefan-Maxwell Diffusion in the
+    electrolyte.
+
+    Parameters
+    ----------
+    j : :class:`pybamm.Symbol`
+        An expression tree that represents the concentration flux at the
+        electrode-electrolyte interface
+
+    *Extends:* :class:`BaseModel`
+    """
+
+    def __init__(self, j):
+        super().__init__()
+
+        # Domains
+        whole_cell = ["negative electrode", "separator", "positive electrodde"]
+
+        # Variables
+        c = pybamm.Variable("concentration", domain=whole_cell)
+        eps_n = pybamm.Variable("porosity_n", domain=["negative electrode"])
+        eps_s = pybamm.Variable("porosity_s", domain=["separator"])
+        eps_p = pybamm.Variable("porosity_p", domain=["positive electrode"])
+        eps = pybamm.Concatenation(eps_n, eps_s, eps_p)
+
+        # Parameters
+
+        # Model
+        # flux
+        N = -D * eps ** 1.5 * pybamm.grad(c)
+        # cation conservation equation
+        dcdt = 1 / eps * (1 / Cd * pybamm.div(N) + (s + beta_surf) * j)
+
+        self.rhs = {c: dcdt}
+        self.initial_conditions = {c: c_init}
+        self.boundary_conditions = {N: {"left": 0, "right": 0}}
+        self.variables = {"concentration": c, "flux": N, "porosity": eps}
