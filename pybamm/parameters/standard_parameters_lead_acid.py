@@ -96,6 +96,15 @@ D_dim = pybamm.Parameter("epsn_max")
 rho_dim = pybamm.Parameter("epsn_max")
 mu_dim = pybamm.Parameter("epsn_max")
 
+
+def U_Pb(c):
+    return U_Pb_ref
+
+
+def U_PbO2(c):
+    return U_PbO2_ref
+
+
 # --------------------------------------------------------------------------------------
 """Dimensionless Parameters"""
 
