@@ -104,3 +104,8 @@ class StefanMaxwellDiffusionWithPorosity(pybamm.BaseModel):
         self.initial_conditions = {c: c_init}
         self.boundary_conditions = {N: {"left": 0, "right": 0}}
         self.variables = {"concentration": c, "flux": N, "porosity": eps}
+
+        # Overwrite default parameter values
+        self.default_parameter_values = pybamm.ParameterValues(
+            "input/parameters/lead-acid/default.csv", {"current scale": 1}
+        )
