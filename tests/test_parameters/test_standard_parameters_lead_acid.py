@@ -52,7 +52,9 @@ class TestStandardParametersLeadAcid(unittest.TestCase):
         # create
         s = pybamm.standard_parameters_lead_acid.s
         self.assertIsInstance(s, pybamm.Concatenation)
-        self.assertEqual(s.domain, ["whole cell"])
+        self.assertEqual(
+            s.domain, ["negative electrode", "separator", "positive electrode"]
+        )
 
         # process parameters and discretise
         parameter_values = pybamm.ParameterValues(

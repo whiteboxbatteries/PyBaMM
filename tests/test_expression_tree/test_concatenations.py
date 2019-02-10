@@ -31,10 +31,6 @@ class TestConcatenations(unittest.TestCase):
             ["negative electrode", "separator", "positive electrode", "test"],
         )
 
-        # Whole cell concatenations should simplify
-        conc = pybamm.Concatenation(a, b)
-        self.assertEqual(conc.domain, ["whole cell"])
-
         # Can't concatenate nodes with overlapping domains
         d = pybamm.Symbol("d", domain=["separator"])
         with self.assertRaises(pybamm.DomainError):
@@ -124,9 +120,6 @@ class TestConcatenations(unittest.TestCase):
                 ]
             ),
         )
-
-        # check special case: final domain is still ["whole cell"]
-        self.assertEqual(conc.domain, ["whole cell"])
 
 
 if __name__ == "__main__":

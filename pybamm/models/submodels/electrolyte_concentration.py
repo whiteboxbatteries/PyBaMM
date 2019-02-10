@@ -46,9 +46,9 @@ class StefanMaxwellDiffusion(pybamm.BaseModel):
         t_plus = pybamm.standard_parameters.t_plus
         ce0 = pybamm.standard_parameters.ce0
 
-        electrolyte_domain = ["whole cell"]
+        whole_cell = ["negative electrode", "separator", "positive electrode"]
 
-        c_e = pybamm.Variable("c_e", electrolyte_domain)
+        c_e = pybamm.Variable("c_e", domain=whole_cell)
 
         N_e = -(epsilon ** b) * pybamm.grad(c_e)
 
@@ -60,7 +60,7 @@ class StefanMaxwellDiffusion(pybamm.BaseModel):
         self.variables = {"c_e": c_e, "N_e": N_e}
 
 
-class StefanMaxwellDiffusionWithElectrolyte(pybamm.BaseModel):
+class StefanMaxwellDiffusionWithPorosity(pybamm.BaseModel):
     """A class that generates the expression tree for Stefan-Maxwell Diffusion in the
     electrolyte.
 
@@ -77,7 +77,7 @@ class StefanMaxwellDiffusionWithElectrolyte(pybamm.BaseModel):
         super().__init__()
 
         # Domains
-        whole_cell = ["negative electrode", "separator", "positive electrodde"]
+        whole_cell = ["negative electrode", "separator", "positive electrode"]
 
         # Variables
         c = pybamm.Variable("concentration", domain=whole_cell)
@@ -87,10 +87,16 @@ class StefanMaxwellDiffusionWithElectrolyte(pybamm.BaseModel):
         eps = pybamm.Concatenation(eps_n, eps_s, eps_p)
 
         # Parameters
+        D = pybamm.standard_parameters_lead_acid.D
+        Cd = pybamm.standard_parameters_lead_acid.Cd
+        s = pybamm.standard_parameters_lead_acid.s
+        beta_surf = pybamm.standard_parameters_lead_acid.beta_surf
+        # Initial conditions
+        c_init = pybamm.standard_parameters_lead_acid.c_init
 
         # Model
         # flux
-        N = -D * eps ** 1.5 * pybamm.grad(c)
+        N = -(D(c) * eps ** 1.5) * pybamm.grad(c)
         # cation conservation equation
         dcdt = 1 / eps * (1 / Cd * pybamm.div(N) + (s + beta_surf) * j)
 

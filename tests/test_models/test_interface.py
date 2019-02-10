@@ -87,12 +87,16 @@ class TestButlerVolmerLeadAcid(unittest.TestCase):
                 ["negative electrode", "separator", "positive electrode"], system
             )
             self.assertIsInstance(bv, pybamm.Concatenation)
-            self.assertEqual(bv.domain, ["whole cell"])
+            self.assertEqual(
+                bv.domain, ["negative electrode", "separator", "positive electrode"]
+            )
 
             # None converts to whole cell
             bv = pybamm.interface.butler_volmer_lead_acid()
             self.assertIsInstance(bv, pybamm.Concatenation)
-            self.assertEqual(bv.domain, ["whole cell"])
+            self.assertEqual(
+                bv.domain, ["negative electrode", "separator", "positive electrode"]
+            )
 
     def test_failure(self):
         with self.assertRaises(ValueError):

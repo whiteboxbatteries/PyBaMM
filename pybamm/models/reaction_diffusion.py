@@ -32,7 +32,7 @@ class ReactionDiffusionModel(pybamm.BaseModel):
         # Load reaction flux from submodels
         G = pybamm.interface.homogeneous_reaction()
         # Load diffusion model from submodels
-        diffusion_model = pybamm.electrolyte.StefanMaxwellDiffusion(G)
+        diffusion_model = pybamm.electrolyte_concentration.StefanMaxwellDiffusion(G)
 
         # Create own model from diffusion model
         self.update(diffusion_model)

@@ -49,17 +49,7 @@ class BinaryOperator(pybamm.Symbol):
         return "{!s} {} {!s}".format(self.children[0], self.name, self.children[1])
 
     def get_children_domains(self, ldomain, rdomain):
-        if (
-            ldomain == rdomain
-            or (
-                ldomain == ["negative electrode", "separator", "positive electrode"]
-                and rdomain == ["whole cell"]
-            )
-            or (
-                rdomain == ["negative electrode", "separator", "positive electrode"]
-                and ldomain == ["whole cell"]
-            )
-        ):
+        if ldomain == rdomain:
             return ldomain
         elif ldomain == []:
             return rdomain

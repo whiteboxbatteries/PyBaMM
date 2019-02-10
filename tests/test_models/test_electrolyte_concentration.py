@@ -1,5 +1,5 @@
 #
-# Tests for the electrolyte submodels
+# Tests for the electrolyte concentrationsubmodels
 #
 from __future__ import absolute_import, division
 from __future__ import print_function, unicode_literals
@@ -12,11 +12,11 @@ import unittest
 class TestStefanMaxwellDiffusion(unittest.TestCase):
     def test_make_tree(self):
         G = pybamm.Scalar(1)
-        pybamm.electrolyte.StefanMaxwellDiffusion(G)
+        pybamm.electrolyte_concentration.StefanMaxwellDiffusion(G)
 
     def test_basic_processing(self):
         G = pybamm.Scalar(0.001)
-        model = pybamm.electrolyte.StefanMaxwellDiffusion(G)
+        model = pybamm.electrolyte_concentration.StefanMaxwellDiffusion(G)
 
         modeltest = tests.StandardModelTest(model)
         # Either
@@ -28,6 +28,19 @@ class TestStefanMaxwellDiffusion(unittest.TestCase):
         # Or
         # 2. run all the tests in one go
         modeltest.test_all()
+
+
+class TestStefanMaxwellDiffusionWithPorosity(unittest.TestCase):
+    def test_make_tree(self):
+        j = pybamm.Scalar(1)
+        pybamm.electrolyte_concentration.StefanMaxwellDiffusionWithPorosity(j)
+
+    # def test_basic_processing(self):
+    #     j = pybamm.Scalar(0.001)
+    #     model = pybamm.electrolyte_concentration.StefanMaxwellDiffusionWithPorosity(j)
+    #
+    #     modeltest = tests.StandardModelTest(model)
+    #     modeltest.test_all()
 
 
 if __name__ == "__main__":

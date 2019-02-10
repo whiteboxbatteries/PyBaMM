@@ -3,5 +3,5 @@ Submodels
 
 .. toctree::
 
-  electrolyte
+  electrolyte_concentration
   interface

@@ -97,11 +97,12 @@ from .models import lead_acid
 #
 # Submodel classes
 #
-from .models.submodels import electrolyte, interface
+from .models.submodels import electrolyte_concentration, interface
 
 #
-# Parameters class and methods
+# Parameters class and methods (we need KNOWN_DOMAINS for this)
 #
+from .discretisations.base_mesh import KNOWN_DOMAINS
 from .parameters.parameter_values import ParameterValues
 from .parameters import functions_lead_acid
 from .parameters import standard_parameters
@@ -115,7 +116,6 @@ from .discretisations.finite_volume_discretisations import (
     FiniteVolumeDiscretisation,
     NodeToEdge,
 )
-from .discretisations.base_mesh import KNOWN_DOMAINS
 from .discretisations.base_mesh import BaseMesh, BaseSubmesh
 from .discretisations.finite_volume_meshes import (
     FiniteVolumeMacroMesh,
