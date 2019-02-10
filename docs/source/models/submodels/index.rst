@@ -5,3 +5,4 @@ Submodels
 
   electrolyte_concentration
   interface
+  porosity

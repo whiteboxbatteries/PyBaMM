@@ -1,5 +1,5 @@
 #
-# Tests for the electrolyte concentrationsubmodels
+# Tests for the electrolyte concentration submodels
 #
 from __future__ import absolute_import, division
 from __future__ import print_function, unicode_literals
@@ -35,15 +35,14 @@ class TestStefanMaxwellDiffusionWithPorosity(unittest.TestCase):
         j = pybamm.Scalar(1)
         pybamm.electrolyte_concentration.StefanMaxwellDiffusionWithPorosity(j)
 
-    def test_basic_processing(self):
+    def test_parameter_processing(self):
         j = pybamm.Scalar(0.001)
         model = pybamm.electrolyte_concentration.StefanMaxwellDiffusionWithPorosity(j)
 
         modeltest = tests.StandardModelTest(model)
-        model.check_well_posedness()
         modeltest.test_processing_parameters()
-        # can't discretise or solve as we don't have any equations for porosity in this
-        # submodel
+        # model isn't well-posed, can't discretise or solve as we don't have any
+        # equations for porosity in this submodel
 
 
 if __name__ == "__main__":

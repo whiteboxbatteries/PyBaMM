@@ -97,7 +97,7 @@ from .models import lead_acid
 #
 # Submodel classes
 #
-from .models.submodels import electrolyte_concentration, interface
+from .models.submodels import electrolyte_concentration, interface, porosity
 
 #
 # Parameters class and methods (we need KNOWN_DOMAINS for this)
