@@ -21,69 +21,84 @@ def homogeneous_reaction():
     return pybamm.Concatenation(current_neg, current_sep, current_pos)
 
 
-def butler_volmer_lead_acid(domain=None, system="dae"):
+def butler_volmer_lead_acid(c, phi, domain=None):
     """
     Butler-Volmer reactions for lead-acid chemistry
 
     .. math::
-        j = j_0(c) * \\sinh(\\eta),
+        j = j_0(c) * \\sinh(\\phi - U(c)),
 
-        \\text{where} \\eta = \\Phi_\\text{s} - \\Phi - U(c)
+        \\text{where} \\phi = \\Phi_\\text{s} - \\Phi
 
     Parameters
     ----------
+    c : :class:`pybamm.Symbol`
+        The electrolyte concentration
+    phi : :class:`pybamm.Symbol`
+        The difference betweent the solid potential and electrolyte potential
     domain : iterable of strings
-        The domain in which to calculate the interfacial current density
-    system : string
-        Whether the model being solved is in the DAE form (e.g.
-        :class:`pybamm.lead_acid.Full1DDAE` or the PDE form (e.g.
-        :class:`pybamm.lead_acid.Full1DPDE`). If "dae", the variables are c, Phi and
-        Phis. If PDE, the variables are c and eta. Default is "dae".
-
+        The domain in which to calculate the interfacial current density. Default is
+        None, in which case the domain is calculated based on c and phi or defaults to
+        the domain spanning the whole cell
 
     Returns
     -------
     :class:`pybamm.Symbol`
         The interfacial current density in the appropriate domain
     """
-    # avoid passing list (mutable) as default argument
     if domain is None:
-        domain = ["negative electrode", "separator", "positive electrode"]
+        # default is for domain to be across the whole cell
+        # (if not specified by c.domain or phi.domain)
+        if c.domain == [] and phi.domain == []:
+            domain = ["negative electrode", "separator", "positive electrode"]
+        # otherwise read domain from c and phi, making sure they are consistent with
+        # each other
+        else:
+            if phi.domain == c.domain or c.domain == [] or phi.domain == []:
+                domain = c.domain
+            else:
+                raise pybamm.DomainError(
+                    "c and phi must have the same (or empty) domain"
+                )
 
-    # Variables
-    cn = pybamm.Variable("concentration", domain=["negative electrode"])
-    cp = pybamm.Variable("concentration", domain=["positive electrode"])
-    if system == "dae":
-        Phin = pybamm.Variable("electrolyte potential", domain=["negative electrode"])
-        Phip = pybamm.Variable("electrolyte potential", domain=["positive electrode"])
-        Phisn = pybamm.Variable("solid potential", domain=["negative electrode"])
-        Phisp = pybamm.Variable("solid potential", domain=["positive electrode"])
-        etan = Phisn - Phin - pybamm.standard_parameters_lead_acid.U_Pb(cn)
-        etap = Phisp - Phip - pybamm.standard_parameters_lead_acid.U_PbO2(cp)
-    elif system == "pde":
-        etan = pybamm.Variable("overpotential", domain=["negative electrode"])
-        etap = pybamm.Variable("overpotential", domain=["positive electrode"])
-    else:
-        raise ValueError("system '{}' not recognised".format(system))
-    # Exchange-current densities
-    j0n = exchange_current_density(cn, ["negative electrode"])
-    j0p = exchange_current_density(cp, ["positive electrode"])
-
-    # Interfacial current density
-    current_neg = j0n * etan  # Function(etan, np.sinh)
-    current_pos = j0p * etap  # Function(etap, np.sinh)
+    # Get the current densities based on domain
     if domain == ["negative electrode"]:
-        return current_neg
+        j0n = exchange_current_density(c, ["negative electrode"])
+        etan = phi - pybamm.standard_parameters_lead_acid.U_Pb(c)
+        return j0n * etan  # Function(etan, np.sinh)
     elif domain == ["positive electrode"]:
-        return current_pos
+        j0p = exchange_current_density(c, ["positive electrode"])
+        etap = phi - pybamm.standard_parameters_lead_acid.U_PbO2(c)
+        return j0p * etap  # Function(etap, np.sinh)
+    # To get current density across the whole domain, unpack and call this function
+    # again in the subdomains, then concatenate
     elif domain == ["negative electrode", "separator", "positive electrode"]:
+        # Unpack c
+        if all([isinstance(var, pybamm.Concatenation) for var in [c, phi]]):
+            cn, cs, cp = c.children
+            phin, phis, phip = phi.children
+        else:
+            raise ValueError(
+                "c and phi must both be Concatenations, not '{}' and '{}'".format(
+                    type(c), type(phi)
+                )
+            )
+        # Negative electrode
+        import ipdb
+
+        ipdb.set_trace()
+        current_neg = butler_volmer_lead_acid(cn, phin, domain=["negative electrode"])
+        # Separator
         current_sep = pybamm.Scalar(0, domain=["separator"])
+        # Positive electrode
+        current_pos = butler_volmer_lead_acid(cp, phip, domain=["positive electrode"])
+        # Concatenate
         return pybamm.Concatenation(current_neg, current_sep, current_pos)
     else:
         raise pybamm.DomainError("domain '{}' not recognised".format(domain))
 
 
-def exchange_current_density(c, domain):
+def exchange_current_density(c, domain=None):
     """The exchange current-density as a function of concentration
 
     Parameters
@@ -92,13 +107,21 @@ def exchange_current_density(c, domain):
         A Variable representing the concentration
     domain : string
         Which domain to calculate the exchange current density in ("negative electrode"
-        or "positive electrode")
+        or "positive electrode"). Default is None, in which case the domain is c.domain
 
     Returns
     -------
     :class:`pybamm.Symbol`
         The exchange-current density
     """
+    if domain is None:
+        # read domain from c if it exists
+        if c.domain != []:
+            domain = c.domain
+        # otherwise raise error
+        else:
+            raise ValueError("domain cannot be None if c.domain is empty")
+
     if domain == ["negative electrode"]:
         # concentration domain should be empty or the same as domain
         if c.domain not in [["negative electrode"], []]:

@@ -13,29 +13,13 @@ class StefanMaxwellDiffusion(pybamm.BaseModel):
     Parameters
     ----------
     G : :class:`pybamm.Symbol`
-        An expression tree that represents the concentration flux at the
-        electrode-electrolyte interface
+        The concentration flux at the electrode-electrolyte interface
 
-    Attributes
-    ----------
-
-    rhs: dict
-        A dictionary that maps expressions (variables) to expressions that represent
-        the rhs
-    initial_conditions: dict
-        A dictionary that maps expressions (variables) to expressions that represent
-        the initial conditions
-    boundary_conditions: dict
-        A dictionary that maps expressions (variables) to expressions that represent
-        the boundary conditions
-    variables: dict
-        A dictionary that maps strings to expressions that represent
-        the useful variables
 
     *Extends:* :class:`BaseModel`
     """
 
-    def __init__(self, G):
+    def __init__(self, c_e, G):
         super().__init__()
 
         epsilon = pybamm.standard_parameters.epsilon_s  # make issue for spatially
@@ -73,18 +57,18 @@ class StefanMaxwellDiffusionWithPorosity(pybamm.BaseModel):
     *Extends:* :class:`BaseModel`
     """
 
-    def __init__(self, j):
+    def __init__(self, c, eps, j):
         super().__init__()
 
         # Domains
         whole_cell = ["negative electrode", "separator", "positive electrode"]
 
         # Variables
-        c = pybamm.Variable("concentration", domain=whole_cell)
-        eps_n = pybamm.Variable("porosity_n", domain=["negative electrode"])
-        eps_s = pybamm.Variable("porosity_s", domain=["separator"])
-        eps_p = pybamm.Variable("porosity_p", domain=["positive electrode"])
-        eps = pybamm.Concatenation(eps_n, eps_s, eps_p)
+        # c = pybamm.Variable("concentration", domain=whole_cell)
+        # eps_n = pybamm.Variable("porosity_n", domain=["negative electrode"])
+        # eps_s = pybamm.Variable("porosity_s", domain=["separator"])
+        # eps_p = pybamm.Variable("porosity_p", domain=["positive electrode"])
+        # eps = pybamm.Concatenation(eps_n, eps_s, eps_p)
 
         # Parameters
         D = pybamm.standard_parameters_lead_acid.D

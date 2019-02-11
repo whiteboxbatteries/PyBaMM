@@ -11,21 +11,23 @@ class Porosity(pybamm.BaseModel):
 
     Parameters
     ----------
+    eps : :class:`pybamm.Variable` or :class:`pybamm.Concatenation`
+        The porosity variable (can be Concatenation of porosity variables in the
+        different subdomains)
     j : :class:`pybamm.Symbol`
-        An expression tree that represents the concentration flux at the
-        electrode-electrolyte interface
+        The interfacial current density at the electrode-electrolyte interface
 
     *Extends:* :class:`BaseModel`
     """
 
-    def __init__(self, j):
+    def __init__(self, eps, j):
         super().__init__()
 
         # Variables
-        eps_n = pybamm.Variable("porosity_n", domain=["negative electrode"])
-        eps_s = pybamm.Variable("porosity_s", domain=["separator"])
-        eps_p = pybamm.Variable("porosity_p", domain=["positive electrode"])
-        eps = pybamm.Concatenation(eps_n, eps_s, eps_p)
+        # eps_n = pybamm.Variable("porosity_n", domain=["negative electrode"])
+        # eps_s = pybamm.Variable("porosity_s", domain=["separator"])
+        # eps_p = pybamm.Variable("porosity_p", domain=["positive electrode"])
+        # eps = pybamm.Concatenation(eps_n, eps_s, eps_p)
 
         # Parameters
         beta_surf = pybamm.standard_parameters_lead_acid.beta_surf
