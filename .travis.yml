@@ -1,6 +1,6 @@
 sudo: false
 
-dist: trusty
+dist: xenial
 
 language: python
 
@@ -16,37 +16,23 @@ addons:
 matrix:
     include:
         # Unit testing on all supported Python versions on Ubuntu
-        # - python: "2.7"
-        #   env:
-        #     - PYBAMM_UNIT=true
-        #   if: type != cron
-        # - python: "2.7.6"
-        #   env:
-        #     - PYBAMM_UNIT=true
-        #   if: type != cron
-        # - python: "3.4"
-        #   env:
-        #     - PYBAMM_UNIT=true
-        #   if: type != cron
-        # - python: "3.5"
-        #   env:
-        #     - PYBAMM_UNIT=true
-        #   if: type != cron
+        - python: "3.4"
+          env:
+            - PYBAMM_UNIT=true
+          if: type != cron
+        - python: "3.5"
+          env:
+            - PYBAMM_UNIT=true
+          if: type != cron
         - python: "3.6"
           env:
             - PYBAMM_UNIT=true
           if: type != cron
-        #- python: "3.7"
-        #  env:
-        #    - PINT_UNIT=true
-        #  if: type != cron
-        # Unit testing on OS/X
-        # - os: osx
-        #   language: generic
-        #   env:
-        #     - PYBAMM_UNIT=true
-        #   if: type != cron
-        # Docs, style and cover checking, latest Python version only
+        - python: "3.7"
+          env:
+            - PYBAMM_UNIT=true
+          if: type != cron
+        # Docs, style and cover checking, 'default' Python version (3.6) only
         - python: "3.6"
           env:
             - PYBAMM_DOCS=true
