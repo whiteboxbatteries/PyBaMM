@@ -18,7 +18,7 @@ setup(
     install_requires=[
         "numpy>=1.14",
         "scipy>=1.0",
-        "pandas>=0.23",
+        "pandas>=0.20",
         "anytree>=2.4.3",
         # Note: Matplotlib is loaded for debug plots, but to ensure pints runs
         # on systems without an attached display, it should never be imported
