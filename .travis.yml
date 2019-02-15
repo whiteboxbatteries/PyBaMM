@@ -16,10 +16,6 @@ addons:
 matrix:
     include:
         # Unit testing on all supported Python versions on Ubuntu
-        - python: "3.4"
-          env:
-            - PYBAMM_UNIT=true
-          if: type != cron
         - python: "3.5"
           env:
             - PYBAMM_UNIT=true

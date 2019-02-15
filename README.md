@@ -16,7 +16,7 @@ PyBaMM comes with a number of [detailed examples](examples/README.md), hosted he
 
 You'll need the following requirements:
 
-- Python 2.7 or Python 3.4+
+- Python 3.5+
 - Python libraries: `numpy` `scipy` `pandas` `matplotlib`
 
 These can easily be installed using `pip`. To do this, first make sure you have the latest version of pip installed:

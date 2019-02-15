@@ -109,18 +109,7 @@ Class names are CamelCase, and start with an upper case letter, for example `MyO
 
 ### Python 2 and 3
 
-Python is currently in a long, long transition phase from Python 2 to Python 3. PyBaMM supports both Python 2 (version 2.7 and upwards) and Python 3 (version 3.4 and upwards).
-The easiest way to write code that works on both versions is to write for Python 3, (avoiding the more spectacular new features) and [then test on both versions](#testing).
-
-In addition, most scripts start with these lines:
-
-```
-from __future__ import absolute_import, division
-from __future__ import print_function, unicode_literals
-```
-
-These [future imports](https://docs.python.org/2/library/__future__.html) are ignored by Python 3, but tell Python 2 to mimmick some of its features. Notably, the ``division`` package changes the result of ``3 / 2`` from ``1`` to ``1.5`` (this means you can write ``1 / x`` instead of ``1.0 / x``).
-
+Support for Python 2 is shortly coming to an end. PyBaMM supports Python 3 (version 3.5 and upwards).
 
 ## Dependencies and reusing code
 
