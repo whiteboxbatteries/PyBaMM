@@ -125,8 +125,13 @@ from .discretisations.finite_volume_discretisations import (
     FiniteVolumeDiscretisation,
     NodeToEdge,
 )
+from .discretisations.scikit_fem_discretisations import (
+    ScikitFiniteElementDiscretisation,
+)
+
 from .discretisations.meshes import KNOWN_DOMAINS
 from .discretisations.meshes import Mesh, SubMesh1D, Uniform1DSubMesh
+from .discretisations.scikit_fem_meshes import ScikitFemMesh1D
 
 #
 # Simulation class

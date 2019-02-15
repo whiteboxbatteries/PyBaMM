@@ -33,3 +33,8 @@ class ScikitFemMesh1D:
         edges = np.linspace(spatial_lims["min"], spatial_lims["max"], npts + 1)
         self._mesh = skfem.MeshLine(edges)
 
+    @property
+    def fem_mesh(self):
+        return self._mesh
+
+

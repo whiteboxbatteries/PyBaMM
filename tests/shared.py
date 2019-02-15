@@ -7,7 +7,7 @@ import numpy as np
 
 
 class TestDefaults1DMacro:
-    def __init__(self):
+    def __init__(self,submesh_type=pybamm.Uniform1DSubMesh):
         self.param = pybamm.ParameterValues(
             base_parameters={"Ln": 0.3, "Ls": 0.3, "Lp": 0.3}
         )
