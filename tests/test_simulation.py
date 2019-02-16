@@ -49,14 +49,6 @@ class TestSimulation(unittest.TestCase):
         sim = pybamm.Simulation(model)
         sim.run()
 
-    def test_simulation_os(self):
-        result = os.system("python3 pybamm/simulation.py")
-        # test that system has run successfully
-        self.assertEqual(result, 0)
-
-        result = os.system("python3 pybamm/simulation.py LOQS")
-        self.assertEqual(result, 0)
-
 
 if __name__ == "__main__":
     print("Add -v for more debug output")

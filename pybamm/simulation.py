@@ -40,22 +40,34 @@ class Simulation(object):
         self,
         model,
         parameter_values=None,
-        discretisation=None,
+        geometry=None,
+        submesh_types=None,
+        submesh_pts=None,
+        spatial_methods=None,
         solver=None,
         name="unnamed",
     ):
         # Read defaults from model
         if parameter_values is None:
             parameter_values = model.default_parameter_values
-        if discretisation is None:
-            discretisation = model.default_discretisation
+        if geometry is None:
+            geometry = model.default_geometry
+        if submesh_types is None:
+            submesh_types = model.default_submesh_types
+        if submesh_pts is None:
+            submesh_pts = model.default_submesh_pts
+        if solver is None:
+            solver = model.default_solver
         if solver is None:
             solver = model.default_solver
 
         # Assign attributes
         self.model = model
         self.parameter_values = parameter_values
-        self.discretisation = discretisation
+        parameter_values.process_geometry(geometry)
+        self.geometry = geometry
+        self.mesh = pybamm.Mesh(geometry, submesh_types, submesh_pts)
+        self.discretisation = pybamm.Discretisation(self.mesh, spatial_methods)
         self.solver = solver
         self.name = name
 
@@ -80,36 +92,3 @@ class Simulation(object):
 
     def plot(self):
         raise NotImplementedError
-
-
-# QUESTION: is there a way to test this?
-if __name__ == "__main__":
-    # Read inputs
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "model_name", nargs="?", default="LOQS", help="the model to be run"
-    )
-    # parser.add_argument(
-    #     "--current", type=float, nargs=1, help="the charge/discharge current"
-    # )
-    # parser.add_argument(
-    #     "--Crate", type=float, nargs=1, help="the charge/discharge C-rate"
-    # )
-    # parser.add_argument("-s", "--save", action="store_true", help="save the output")
-    # parser.add_argument(
-    #     "-f",
-    #     "--force",
-    #     action="store_true",
-    #     help="overwrite saved output even if it is available",
-    # )
-    args = parser.parse_args()
-
-    # QUESTION: there must be a cleaner way to do this?
-    try:
-        model_class = getattr(pybamm, args.model_name)
-    except AttributeError:
-        model_class = getattr(pybamm.lead_acid, args.model_name)
-    model = model_class()
-    sim = Simulation(model)
-    sim.run()
-    # sim.plot()
