@@ -61,6 +61,7 @@ install:
 
 before_script:
 - python --version
+- echo $LD_LIBRARY_PATH
 
 # Note that default timeout is 10 minutes
 # This can be changed with travis_wait, but that leads to
