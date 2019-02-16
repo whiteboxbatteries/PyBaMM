@@ -17,5 +17,5 @@ cd $CURRENT_DIR
 rm -rf $TMP_DIR
 export LD_LIBRARY_PATH=$INSTALL_DIR/lib:$LD_LIBRARY_PATH
 export SUNDIALS_INST=$INSTALL_DIR
-pip install scikits.odes
+pip install -v scikits.odes
 
