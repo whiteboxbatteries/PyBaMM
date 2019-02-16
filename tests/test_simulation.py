@@ -5,6 +5,7 @@ import pybamm
 import tests.shared as shared
 
 import unittest
+import os
 
 
 class TestSimulation(unittest.TestCase):
@@ -46,13 +47,15 @@ class TestSimulation(unittest.TestCase):
         model = pybamm.electrolyte.StefanMaxwellDiffusion(G)
 
         sim = pybamm.Simulation(model)
-        sim.set_parameters()
-        sim.discretise()
-        sim.solve()
+        sim.run()
 
-        model2 = pybamm.electrolyte.StefanMaxwellDiffusion(G)
-        sim2 = pybamm.Simulation(model2)
-        sim2.run()
+    def test_simulation_os(self):
+        result = os.system("python3 pybamm/simulation.py")
+        # test that system has run successfully
+        self.assertEqual(result, 0)
+
+        result = os.system("python3 pybamm/simulation.py LOQS")
+        self.assertEqual(result, 0)
 
 
 if __name__ == "__main__":

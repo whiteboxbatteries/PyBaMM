@@ -65,21 +65,12 @@ class Simulation(object):
     def __str__(self):
         return self.name
 
-    def set_parameters(self):
+    def run(self, t_eval=None):
         self.parameter_values.process_model(self.model)
-
-    def discretise(self):
         self.discretisation.process_model(self.model)
-
-    def solve(self, t_eval=None):
         if t_eval is None:
             t_eval = self.default_t_eval
         self.solver.solve(self.model, t_eval)
-
-    def run(self, t_eval=None):
-        self.set_parameters()
-        self.discretise()
-        self.solve(t_eval)
 
     def load(self):
         raise NotImplementedError
