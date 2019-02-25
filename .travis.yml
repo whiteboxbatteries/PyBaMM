@@ -62,7 +62,7 @@ install:
   - if [[ $PYBAMM_STYLE == true ]]; then pip install -r requirements-dev.txt; fi;
   - if [[ $TRAVIS_EVENT_TYPE == 'cron' ]]; then pip install -r requirements-dev.txt; fi;
   - if [[ $PYBAMM_COVER == true ]]; then pip install coverage codecov; fi;
-  - source scripts/ensure_sindials_installed.sh
+  - source scripts/ensure_sundials_installed.sh
   - pip install -v scikits.odes
 
 before_script:
