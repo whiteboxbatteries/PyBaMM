@@ -1,6 +1,7 @@
 #
 # Standard basic tests for any model
 #
+
 import pybamm
 import numpy as np
 
