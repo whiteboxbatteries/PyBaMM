@@ -13,6 +13,11 @@ addons:
     - libopenblas-dev
     - liblapack-dev
 
+cache:
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/sundials
+
 matrix:
     include:
         # Unit testing on all supported Python versions on Ubuntu
@@ -57,7 +62,8 @@ install:
   - if [[ $PYBAMM_STYLE == true ]]; then pip install -r requirements-dev.txt; fi;
   - if [[ $TRAVIS_EVENT_TYPE == 'cron' ]]; then pip install -r requirements-dev.txt; fi;
   - if [[ $PYBAMM_COVER == true ]]; then pip install coverage codecov; fi;
-  - source scripts/install_scikits_odes.sh
+  - source scripts/ensure_sindials_installed.sh
+  - pip install -v scikits.odes
 
 before_script:
 - python --version
