@@ -13,10 +13,10 @@ addons:
     - libopenblas-dev
     - liblapack-dev
 
-cache:
-  directories:
-    - $HOME/.cache/pip
-    - $HOME/sundials
+#cache:
+#  directories:
+#    - $HOME/.cache/pip
+#    - $HOME/sundials
 
 matrix:
     include:
