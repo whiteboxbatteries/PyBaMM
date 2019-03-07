@@ -45,7 +45,7 @@ coverage.xml
 pyproject.toml
 
 # virtual enviroment
-venv/
+venv*/
 bin/
 etc/
 lib/
@@ -55,3 +55,4 @@ pyvenv.cfg
 
 # sundials
 sundials
+
