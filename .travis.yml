@@ -55,7 +55,7 @@ matrix:
 # Note: Only install normal dependencies for unit tests; these should be tested
 #       without the packages from -dev and -doc!
 install:
-  - pip install -U pip
+  - pip install -U pip numpy scipy
   - pip install .
   - if [[ $PYBAMM_DOCS == true ]]; then pip install -e .[docs]; fi;
   - if [[ $PYBAMM_STYLE == true ]]; then pip install -e .[dev]; fi;
