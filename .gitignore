@@ -54,5 +54,5 @@ share/
 pyvenv.cfg
 
 # sundials
-sundials
+sundials*
 

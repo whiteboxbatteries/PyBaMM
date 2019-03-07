@@ -61,8 +61,8 @@ install:
   - if [[ $PYBAMM_STYLE == true ]]; then pip install -e .[dev]; fi;
   - if [[ $TRAVIS_EVENT_TYPE == 'cron' ]]; then pip install -e .[dev]; fi;
   - if [[ $PYBAMM_COVER == true ]]; then pip install coverage codecov; fi;
-  - source scripts/ensure_sundials_installed.sh
-  - pip install -v scikits.odes
+  - source scripts/install_scikits_odes.sh
+#  - pip install -v scikits.odes
 
 before_script:
 - python --version
