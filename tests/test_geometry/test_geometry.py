@@ -85,14 +85,14 @@ class TestGeometry(unittest.TestCase):
         geometry1Dmicro = pybamm.Geometry1DMicro()
         geometry = pybamm.Geometry(geometry1Dmacro, geometry1Dmicro)
         self.assertEqual(
-            list(geometry.keys()),
-            [
+            set(geometry.keys()),
+            {
                 "negative electrode",
                 "separator",
                 "positive electrode",
                 "negative particle",
                 "positive particle",
-            ],
+            },
         )
 
         # update with custom geometry
@@ -115,14 +115,14 @@ class TestGeometry(unittest.TestCase):
         geometry1Dmicro = pybamm.Geometry1DMicro()
         geometry = pybamm.Geometry(geometry3Dmacro, geometry1Dmicro)
         self.assertEqual(
-            list(geometry.keys()),
-            [
+            set(geometry.keys()),
+            {
                 "negative electrode",
                 "separator",
                 "positive electrode",
                 "negative particle",
                 "positive particle",
-            ],
+            },
         )
 
         with self.assertRaises(ValueError):
@@ -132,25 +132,25 @@ class TestGeometry(unittest.TestCase):
     def test_combine_geometries_strings(self):
         geometry = pybamm.Geometry("1D macro", "1D micro")
         self.assertEqual(
-            list(geometry.keys()),
-            [
+            set(geometry.keys()),
+            {
                 "negative electrode",
                 "separator",
                 "positive electrode",
                 "negative particle",
                 "positive particle",
-            ],
+            },
         )
         geometry = pybamm.Geometry("3D macro", "1D micro")
         self.assertEqual(
-            list(geometry.keys()),
-            [
+            set(geometry.keys()),
+            {
                 "negative electrode",
                 "separator",
                 "positive electrode",
                 "negative particle",
                 "positive particle",
-            ],
+            },
         )
 
 
