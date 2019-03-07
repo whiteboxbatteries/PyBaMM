@@ -68,7 +68,7 @@ ce0_dimensional
 cn0_dimensional, cp0_dimensional
     Initial lithium concentration in the negative and positive electrodes
 """
-from pybamm import Parameter
+import pybamm
 
 # --------------------------------------------------------------------------------------
 """Dimensional Parameters"""
